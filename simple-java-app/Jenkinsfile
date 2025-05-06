@@ -9,6 +9,7 @@ pipeline {
             }
         }
         stage('Build') {
+            agent { label 'maven' } 
             steps {
                 echo 'Building the project...'
                 sh 'mvn clean package'

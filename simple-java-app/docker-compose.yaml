@@ -1,0 +1,37 @@
+version: '3.8'
+
+services:
+  jenkins:
+    image: jenkins/jenkins:lts
+    container_name: jenkins
+    restart: unless-stopped
+    ports:
+      - 8080:8080
+      - 50000:50000
+    volumes:
+      - jenkins_home:/var/jenkins_home
+    networks:
+      - jenkins-net
+
+  maven-agent:
+    build:
+      context: ./maven-agent
+    container_name: maven-agent
+    restart: unless-stopped
+    depends_on:
+      - jenkins
+    networks:
+      - jenkins-net
+    command: >
+      -url http://jenkins:8080
+      -secret YOUR_AGENT_SECRET
+      -name maven-agent
+      -webSocket
+      -workDir /home/jenkins/agent
+
+volumes:
+  jenkins_home:
+
+networks:
+  jenkins-net:
+

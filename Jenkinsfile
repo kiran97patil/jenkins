@@ -28,7 +28,7 @@ pipeline {
         stage('Run') {
             steps {
                 echo 'Running the application...'
-                sh 'java -cp target/simple-java-app-1.0.jar com.example.HelloWorld'
+                sh 'java -jar target/simple-java-app-1.0.jar'
             }
         }
     }

@@ -4,29 +4,35 @@ pipeline {
     stages {
         stage('git checkout') {
             steps {
-                echo 'git checkout...'
+                echo 'Git checkout...'
                 echo 'Repository already checked out by Jenkins.'
+                sh 'ls -l'  // Check the contents of the workspace for debugging
             }
         }
+
         stage('Build') {
-            agent { label 'maven' } 
+            agent { label 'maven' }
             steps {
                 echo 'Building the project...'
-                dir('simple-java-app')
-                sh 'mvn clean package'
+                dir('simple-java-app') {  // Change to the directory containing the pom.xml
+                    sh 'mvn clean package'  // Run Maven command here
+                }
             }
         }
+
         stage('Test') {
             steps {
                 echo 'Running tests...'
                 sh 'echo "No tests in this project"'
             }
         }
+
         stage('Run') {
             steps {
                 echo 'Running the application...'
-                sh 'java -cp target/simple-java-app-1.0.jar HelloWorld'
+                sh 'java -cp simple-java-app/target/simple-java-app-1.0.jar HelloWorld'
             }
         }
     }
 }
+

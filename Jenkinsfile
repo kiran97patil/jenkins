@@ -26,8 +26,8 @@ pipeline {
         }
 
         stage('Run') {
+            agent { label 'maven' }
             steps {
-                agent { label 'maven' }
                 echo 'Running the application...'
                 sh 'java -jar simple-java-app/target/simple-java-app-1.0.jar'
             }

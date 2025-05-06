@@ -14,7 +14,6 @@ pipeline {
             agent { label 'maven' }
             steps {
                 echo 'Building the project...'
-              //  dir('simple-java-app') {  // Change to the directory containing the pom.xml
                     sh 'mvn clean package'  // Run Maven command here
                 }
             }
@@ -34,5 +33,3 @@ pipeline {
             }
         }
     }
-}
-

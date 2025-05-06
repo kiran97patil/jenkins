@@ -36,21 +36,25 @@ pipeline {
             steps {
                 echo 'Committing and pushing the artifact to Git...'
                 sh '''
-                    git config user.name "Jenkins"
-                    git config user.email "jenkins@example.com"
+                git config user.name "Jenkins"
+                git config user.email "jenkins@example.com"
 
-                    git add target/simple-java-app-1.0.jar || true
+                # Make sure we are on a local 'master' branch
+                git checkout -B master origin/master
 
-                    # Only commit if there are changes
-                    if ! git diff --cached --quiet; then
-                        git commit -m "Add built JAR artifact"
-                        git push origin master
-                    else
-                        echo "No changes to commit."
-                    fi
-                '''
+                git add target/simple-java-app-1.0.jar || true
+
+                # Only commit if there are changes
+                if ! git diff --cached --quiet; then
+                    git commit -m "Add built JAR artifact"
+                    git push origin master
+                else
+                    echo "No changes to commit."
+                fi
+            '''
             }
-        }
+       }  
+ 
     }
 }
 

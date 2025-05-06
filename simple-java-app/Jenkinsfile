@@ -1,0 +1,30 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('git checkout') {
+            steps {
+                echo 'git checkout...'
+                https://github.com/kiran97patil/jenkins.git'
+            }
+        }
+        stage('Build') {
+            steps {
+                echo 'Building the project...'
+                sh 'mvn clean package'
+            }
+        }
+        stage('Test') {
+            steps {
+                echo 'Running tests...'
+                sh 'echo "No tests in this project"'
+            }
+        }
+        stage('Run') {
+            steps {
+                echo 'Running the application...'
+                sh 'java -cp target/simple-java-app-1.0.jar HelloWorld'
+            }
+        }
+    }
+}

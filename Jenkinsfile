@@ -3,13 +3,14 @@ pipeline {
 
     stages {
         stage('Git Checkout') {
-            steps {
-                echo 'Git checkout...'
-                echo 'Repository already checked out by Jenkins.'
-                sh 'ls -l' // Check the contents of the workspace
-            }
+          steps {
+              echo 'Git checkout...'
+              checkout([$class: 'GitSCM',
+                  branches: [[name: '*/master']],
+                  userRemoteConfigs: [[url: 'https://github.com/kiran97patil/simple-java-app.git', credentialsId: 'github-creadential']]
+              ])
+           }
         }
-
         stage('Build') {
             steps {
                 echo 'Building the project...'
@@ -34,11 +35,20 @@ pipeline {
         stage('Deploy') {
             steps {
                 echo 'Committing and pushing the artifact to Git...'
-                sh 'git config user.name "Jenkins"'
-                sh 'git config user.email "jenkins@example.com"'
-                sh 'git add target/simple-java-app-1.0.jar'  // Add the artifact
-                sh 'git commit -m "Add built JAR artifact"'  // Commit the artifact
-                sh 'git push origin master'  // Push to the master branch
+                sh '''
+                    git config user.name "Jenkins"
+                    git config user.email "jenkins@example.com"
+
+                    git add target/simple-java-app-1.0.jar || true
+
+                    # Only commit if there are changes
+                    if ! git diff --cached --quiet; then
+                        git commit -m "Add built JAR artifact"
+                        git push origin master
+                    else
+                        echo "No changes to commit."
+                    fi
+                '''
             }
         }
     }

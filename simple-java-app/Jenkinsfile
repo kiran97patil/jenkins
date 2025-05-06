@@ -12,6 +12,7 @@ pipeline {
             agent { label 'maven' } 
             steps {
                 echo 'Building the project...'
+                dir('simple-java-app')
                 sh 'mvn clean package'
             }
         }
